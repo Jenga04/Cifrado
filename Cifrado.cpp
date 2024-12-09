@@ -1,19 +1,20 @@
 ﻿// Cifrado.cpp: define el punto de entrada de la aplicación.
 //
 
-#include "Cifrado.h"
+// C++ code to implement Vigenere Cipher
+using namespace std;
 #include <string>
+#include "Cifrado.h"
 #include <iostream>
 #include <vector>
+#include <fstream>
 using namespace std;
 
 int main() {
- cout << "Seleccione una opción: \n";
- cout << "1: Lista de entradas";
- cout << "2: Añadir una entrada";
- cout << "3: Borrar una entrada";
- cout << "4: Borrar archivo";
- cout << "0: Salir";
+	
+	ifstream file("comida.txt");
+	string comida;
+	file >> comida;
+	cout << "Has comido :" << comida << endl;
+	file.close();
 }
-
-
