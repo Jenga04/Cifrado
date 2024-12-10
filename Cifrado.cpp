@@ -9,15 +9,15 @@ using namespace std;
 #include <fstream>
 #include <vector>
  
-void listaEntradas(const string& archivo) {
-    ifstream inputFile(archivo);
-    if (inputFile.is_open()) {
+void listaEntradas(const string& nombreArchivo) {
+    ifstream archivo ("resultado.txt");
+    if (archivo.is_open()) {
         string linea;
-        cout << "Estas son tus entradas: " << endl;
-        while (getline(inputFile, linea)) {
-            cout << linea << endl;
+        int lineaNum = 1;
+        while (getline(archivo, linea)) {
+            cout << lineaNum++ << ":" << linea << endl;
         }
-        inputFile.close();
+        archivo.close();
     }
     else {
         cout << "El archivo no existe" << endl;
@@ -31,7 +31,7 @@ void añadirEntrada(const string& nombreArchivo) {
     cout << "Introduzca la clave: ";
     cin >> clave;
     string textoCifrado = cifrarVigenere(texto, clave);
-    ofstream archivo(nombreArchivo, ios::app);
+    ofstream archivo("resultado.txt", ios::app);
     if (archivo.is_open()) {
         archivo << "Texto original: " << texto << "\n";
         archivo << "Clave: " << clave << "\n";
@@ -43,14 +43,12 @@ void añadirEntrada(const string& nombreArchivo) {
         cout << "No se pudo abriri el archivo." << endl;
     }
 }
-
 void borrarEntrada(const string& nombreArchivo) {
-    ifstream archivo(nombreArchivo);
+    ifstream archivo("resultado.txt");
     if (!archivo.is_open()) {
         cout << "No se pudo abrir el archivo." << endl;
         return;
     }
-
     vector<string> lineas;
     string linea;
     while (getline(archivo, linea)) {
@@ -58,7 +56,7 @@ void borrarEntrada(const string& nombreArchivo) {
     }
     archivo.close();
 
-    listarEntradas(nombreArchivo);
+    listaEntradas("resultado.txt");
     cout << "Introduce el número de la línea que deseas borrar: ";
     int numLinea;
     cin >> numLinea;
@@ -68,10 +66,10 @@ void borrarEntrada(const string& nombreArchivo) {
         return;
     }
 
-    ofstream archivoSalida(nombreArchivo, ios::trunc);
+    ofstream archivoSalida("resultado.txt", ios::trunc);
     if (archivoSalida.is_open()) {
         for (size_t i = 0; i < lineas.size(); ++i) {
-            if (i != static_cast<size_t>(numLinea - 1)) { // Omitir la línea seleccionada
+            if (i != static_cast<size_t>(numLinea - 1)) {
                 archivoSalida << lineas[i] << endl;
             }
         }
@@ -82,3 +80,14 @@ void borrarEntrada(const string& nombreArchivo) {
         cout << "No se pudo escribir en el archivo." << endl;
     }
 }
+void borrarArchivo(const string & nombreArchivo) {
+    ofstream archivo("resultado.txt", ios::trunc);
+    if (archivo.is_open()) {
+        archivo.close();
+        cout << "Archivo borrado correctamente." << endl;
+    }
+    else {
+        cout << "No se pudo abrir el archivo." << endl;
+    }
+}
+
