@@ -18,23 +18,18 @@ string cifrado(const string& texto, const string& clave) {
     }
     return textoCifrado;
 }
- 
-void listaEntradas(const string& nombreArchivo) {
-    ifstream archivo (nombreArchivo);
-    if (archivo.is_open()) {
-        string linea;
-        int numeroLinea = 1;
-        while (getline(archivo, linea)) {
-            cout << numeroLinea++ << ":" << linea << endl;
-        }
-    }
 
+void listaEntradas(const vector<string>& entradas) {
+    if (entradas.empty()) {
+        cout << "No hay entrada disponible." << endl;
+    }
     else {
-        cout << "El archivo no existe" << endl;
-    }
+        for (size_t i = 0; i < entradas.size(); i++) {
+            cout << i + 1 << ":" << entradas[i] << endl;
+        }
+    }       
 }
-
-void añadirEntrada(const string& nombreArchivo) {
+void añadirEntrada(const string& nombreArchivo, vector<string>& entradas) {
     string texto, clave;
     cout << "Introduce el texto a cifrar: ";
     cin.ignore();
@@ -42,68 +37,60 @@ void añadirEntrada(const string& nombreArchivo) {
     cout << "Introduzca la clave: ";
     cin >> clave;
     string textoCifrado = cifrado(texto, clave);
+    entradas.push_back(texto);
     ofstream archivo(nombreArchivo, ios::app);
     if (archivo.is_open()) {
-        archivo << "Texto original: " << texto << "\n";
-        archivo << "Clave: " << clave << "\n";
-        archivo << "Texto cifrado: " << textoCifrado; 
+        archivo << textoCifrado << endl;
         archivo.close();
         cout << "Entrada añadida correctamente." << endl;
     }
     else {
-        cout << "No se pudo abriri el archivo." << endl;
+        cout << "No se pudo abrir el archivo." << endl;
     }
 }
-
-void borrarEntrada(const string& nombreArchivo) {
-    ifstream archivo(nombreArchivo);
-    if (!archivo.is_open()) {
-        cout << "No se pudo abrir el archivo." << endl;
-        return;
-    }
-    vector<string> lineas;
-    string linea;
-    while (getline(archivo, linea)) {
-        lineas.push_back(linea);
-    }
-
-    listaEntradas(nombreArchivo);
-    cout << "Introduce el número de la línea que deseas borrar: ";
-    int numLinea;
-    cin >> numLinea;
-
-    if (numLinea < 1 || numLinea > static_cast<int>(lineas.size())) {
-        cout << "Número de línea no válido." << endl;
+void borrarEntrada(const string& nombreArchivo, vector<string>& entradas) {
+    if (entradas.empty()) {
+        cout << "No hay entradas para borrar." << endl;
         return;
     }
 
-    ofstream archivoSalida(nombreArchivo, ios::trunc);
-    if (archivoSalida.is_open()) {
-        for (size_t i = 0; i < lineas.size(); ++i) {
-            if (i != static_cast<size_t>(numLinea - 1)) {
-                archivoSalida << lineas[i] << endl;
-            }
+    listaEntradas(entradas);
+    cout << "Introduce el número de la entrada que deseas borrar: ";
+    int numEntrada;
+    cin >> numEntrada;
+
+    if (numEntrada < 1 || numEntrada > static_cast<int>(entradas.size())) {
+        cout << "Número de entrada no válido." << endl;
+        return;
+    }
+
+    entradas.erase(entradas.begin() + (numEntrada - 1));
+
+    ofstream archivo(nombreArchivo, ios::trunc);
+    if (archivo.is_open()) {
+        for (const string& entrada : entradas) {
+            string textoCifrado = cifrado (entrada, "clavePorDefecto"); 
+            archivo << textoCifrado << endl;
         }
-        cout << "Línea borrada correctamente." << endl;
+        archivo.close();
+        cout << "Entrada borrada correctamente." << endl;
     }
-
     else {
         cout << "No se pudo escribir en el archivo." << endl;
     }
 }
-
-void borrarArchivo(const string & nombreArchivo) {
+void borrarArchivo(const string& nombreArchivo, vector<string>& entradas) {
     ofstream archivo(nombreArchivo, ios::trunc);
     if (archivo.is_open()) {
         archivo.close();
+        entradas.clear();
         cout << "Archivo borrado correctamente." << endl;
     }
     else {
         cout << "No se pudo abrir el archivo." << endl;
     }
 }
-
-void mostrarMenú(){
+void mostrarMenú() {
     cout << "\n Menú" << endl;
     cout << "1: Lista de entradas" << endl;
     cout << "2: Añadir entrada" << endl;
@@ -112,10 +99,10 @@ void mostrarMenú(){
     cout << "0: Salir" << endl;
     cout << "Seleccione una opción: ";
 }
-
 int main() {
     SetConsoleOutputCP(1252);
     string nombreArchivo = "resultado.txt";
+    vector <string> entradas;
     int opcion;
 
     do {
@@ -124,16 +111,16 @@ int main() {
 
         switch (opcion) {
         case 1:
-            listaEntradas(nombreArchivo);
+            listaEntradas(entradas);
             break;
         case 2:
-            añadirEntrada(nombreArchivo);
+            añadirEntrada(nombreArchivo, entradas);
             break;
         case 3:
-            borrarEntrada(nombreArchivo);
+            borrarEntrada(nombreArchivo, entradas);
             break;
         case 4:
-            borrarArchivo(nombreArchivo);
+            borrarArchivo(nombreArchivo, entradas);
             break;
         case 0:
             cout << "Saliendo del programa." << endl;
