@@ -1,14 +1,10 @@
-﻿// Cifrado.cpp: define el punto de entrada de la aplicación.
-//
-
-// C++ code to implement Vigenere Cipher
-using namespace std;
-#include <string>
+﻿#include <string>
 #include "Cifrado.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include "Windows.h"
+using namespace std;
 
 string cifrado(const string& texto, const string& clave) {
     string textoCifrado = texto;
@@ -28,9 +24,9 @@ void listaEntradas(const string& nombreArchivo) {
     ifstream archivo (nombreArchivo);
     if (archivo.is_open()) {
         string linea;
-        int lineaNum = 1;
+        int numeroLinea = 1;
         while (getline(archivo, linea)) {
-            cout << lineaNum++ << ":" << linea << endl;
+            cout << numeroLinea++ << ":" << linea << endl;
         }
         archivo.close();
     }
@@ -105,19 +101,22 @@ void borrarArchivo(const string & nombreArchivo) {
         cout << "No se pudo abrir el archivo." << endl;
     }
 }
+void mostrarMenú(){
+    cout << "\n Menú" << endl;
+    cout << "1: Lista de entradas" << endl;
+    cout << "2: Añadir entrada" << endl;
+    cout << "3: Borrar entrada" << endl;
+    cout << "4: Borrar archivo" << endl;
+    cout << "0: Salir" << endl;
+    cout << "Seleccione una opción: ";
+}
 int main() {
     SetConsoleOutputCP(1252);
     string nombreArchivo = "resultado.txt";
     int opcion;
 
     do {
-        cout << "\n Menú" << endl;
-        cout << "1: Lista de entradas" << endl;
-        cout << "2: Añadir entrada" << endl;
-        cout << "3: Borrar entrada" << endl;
-        cout << "4: Borrar archivo" << endl;
-        cout << "0: Salir" << endl;
-        cout << "Seleccione una opción: ";
+        mostrarMenú();
         cin >> opcion;
 
         switch (opcion) {
@@ -143,4 +142,3 @@ int main() {
 
     return 0;
 }
-
