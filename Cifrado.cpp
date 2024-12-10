@@ -8,6 +8,20 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <vector>
+
+string cifrado(const string& texto, const string& clave) {
+    string textoCifrado = texto;
+    int n = clave.length();
+
+    for (size_t i = 0; i < texto.length(); ++i) {
+        if (isalpha(texto[i])) {
+            char base = isupper(texto[i]) ? 'A' : 'a';
+            char baseClave = isupper(clave[i % n]) ? 'A' : 'a';
+            textoCifrado[i] = ((texto[i] - base + (clave[i % n] - baseClave)) % 26) + base;
+        }
+    }
+    return textoCifrado;
+}
  
 void listaEntradas(const string& nombreArchivo) {
     ifstream archivo ("resultado.txt");
@@ -30,7 +44,7 @@ void añadirEntrada(const string& nombreArchivo) {
     getline(cin, texto);
     cout << "Introduzca la clave: ";
     cin >> clave;
-    string textoCifrado = cifrarVigenere(texto, clave);
+    string textoCifrado = cifrado(texto, clave);
     ofstream archivo("resultado.txt", ios::app);
     if (archivo.is_open()) {
         archivo << "Texto original: " << texto << "\n";
