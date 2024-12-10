@@ -37,7 +37,7 @@ void añadirEntrada(const string& nombreArchivo) {
         archivo << "Clave: " << clave << "\n";
         archivo << "Texto cifrado: " << textoCifrado << "\n\n";
         archivo.close();
-        cout << "Entrada añadida correctamente." endl;
+        cout << "Entrada añadida correctamente." << endl;
     }
     else {
         cout << "No se pudo abriri el archivo." << endl;
