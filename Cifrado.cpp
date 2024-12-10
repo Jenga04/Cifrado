@@ -6,15 +6,20 @@ using namespace std;
 #include <string>
 #include "Cifrado.h"
 #include <iostream>
-#include <vector>
 #include <fstream>
-using namespace std;
-
-int main() {
-	
-	ifstream file("comida.txt");
-	string comida;
-	file >> comida;
-	cout << "Has comido :" << comida << endl;
-	file.close();
+#include <vector>
+ 
+void listaEntradas(const string& archivo) {
+    ifstream inputFile(archivo);
+    if (inputFile.is_open()) {
+        string linea;
+        cout << "Estas son tus entradas: " << endl;
+        while (getline(inputFile, linea)) {
+            cout << linea << endl;
+        }
+        inputFile.close();
+    }
+    else {
+        cout << "El archivo no existe" << endl;
+    }
 }
