@@ -8,6 +8,7 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "Windows.h"
 
 string cifrado(const string& texto, const string& clave) {
     string textoCifrado = texto;
@@ -24,7 +25,7 @@ string cifrado(const string& texto, const string& clave) {
 }
  
 void listaEntradas(const string& nombreArchivo) {
-    ifstream archivo ("resultado.txt");
+    ifstream archivo (nombreArchivo);
     if (archivo.is_open()) {
         string linea;
         int lineaNum = 1;
@@ -45,7 +46,7 @@ void añadirEntrada(const string& nombreArchivo) {
     cout << "Introduzca la clave: ";
     cin >> clave;
     string textoCifrado = cifrado(texto, clave);
-    ofstream archivo("resultado.txt", ios::app);
+    ofstream archivo(nombreArchivo, ios::app);
     if (archivo.is_open()) {
         archivo << "Texto original: " << texto << "\n";
         archivo << "Clave: " << clave << "\n";
@@ -58,7 +59,7 @@ void añadirEntrada(const string& nombreArchivo) {
     }
 }
 void borrarEntrada(const string& nombreArchivo) {
-    ifstream archivo("resultado.txt");
+    ifstream archivo(nombreArchivo);
     if (!archivo.is_open()) {
         cout << "No se pudo abrir el archivo." << endl;
         return;
@@ -70,7 +71,7 @@ void borrarEntrada(const string& nombreArchivo) {
     }
     archivo.close();
 
-    listaEntradas("resultado.txt");
+    listaEntradas(nombreArchivo);
     cout << "Introduce el número de la línea que deseas borrar: ";
     int numLinea;
     cin >> numLinea;
@@ -80,7 +81,7 @@ void borrarEntrada(const string& nombreArchivo) {
         return;
     }
 
-    ofstream archivoSalida("resultado.txt", ios::trunc);
+    ofstream archivoSalida(nombreArchivo, ios::trunc);
     if (archivoSalida.is_open()) {
         for (size_t i = 0; i < lineas.size(); ++i) {
             if (i != static_cast<size_t>(numLinea - 1)) {
@@ -95,7 +96,7 @@ void borrarEntrada(const string& nombreArchivo) {
     }
 }
 void borrarArchivo(const string & nombreArchivo) {
-    ofstream archivo("resultado.txt", ios::trunc);
+    ofstream archivo(nombreArchivo, ios::trunc);
     if (archivo.is_open()) {
         archivo.close();
         cout << "Archivo borrado correctamente." << endl;
@@ -103,5 +104,43 @@ void borrarArchivo(const string & nombreArchivo) {
     else {
         cout << "No se pudo abrir el archivo." << endl;
     }
+}
+int main() {
+    SetConsoleOutputCP(1252);
+    string nombreArchivo = "resultado.txt";
+    int opcion;
+
+    do {
+        cout << "\n Menú" << endl;
+        cout << "1: Lista de entradas" << endl;
+        cout << "2: Añadir entrada" << endl;
+        cout << "3: Borrar entrada" << endl;
+        cout << "4: Borrar archivo" << endl;
+        cout << "0: Salir" << endl;
+        cout << "Seleccione una opción: ";
+        cin >> opcion;
+
+        switch (opcion) {
+        case 1:
+            listaEntradas(nombreArchivo);
+            break;
+        case 2:
+            añadirEntrada(nombreArchivo);
+            break;
+        case 3:
+            borrarEntrada(nombreArchivo);
+            break;
+        case 4:
+            borrarArchivo(nombreArchivo);
+            break;
+        case 0:
+            cout << "Saliendo del programa." << endl;
+            break;
+        default:
+            cout << "Opción no disponible, por favor, elija una opción válida" << endl;
+        }
+    } while (opcion != 0);
+
+    return 0;
 }
 
