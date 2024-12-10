@@ -23,3 +23,23 @@ void listaEntradas(const string& archivo) {
         cout << "El archivo no existe" << endl;
     }
 }
+void añadirEntrada(const string& nombreArchivo) {
+    string texto, clave;
+    cout << "Introduce el texto a cifrar: ";
+    cin.ignore();
+    getline(cin, texto);
+    cout << "Introduzca la clave: ";
+    cin >> clave;
+    string textoCifrado = cifrarVigenere(texto, clave);
+    ofstream archivo(nombreArchivo, ios::app);
+    if (archivo.is_open()) {
+        archivo << "Texto original: " << texto << "\n";
+        archivo << "Clave: " << clave << "\n";
+        archivo << "Texto cifrado: " << textoCifrado << "\n\n";
+        archivo.close();
+        cout << "Entrada añadida correctamente." endl;
+    }
+    else {
+        cout << "No se pudo abriri el archivo." << endl;
+    }
+}
